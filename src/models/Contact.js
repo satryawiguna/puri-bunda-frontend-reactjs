@@ -1,9 +1,9 @@
-const { Model } = require('sequelize');
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Contact extends Model {
     static associate(models) {
-      this.belongsTo(models.User)
+      this.belongsTo(models.user);
     }
   }
 
@@ -17,13 +17,13 @@ module.exports = (sequelize, DataTypes) => {
       postcode: DataTypes.INTEGER,
       mobile: DataTypes.STRING,
       avatar: DataTypes.STRING,
-      user_id: DataTypes.NUMBER,
+      user_id: DataTypes.NUMBER
     },
     {
       sequelize,
-      modelName: 'contact',
-      underscored: true,
-    },
+      modelName: "contact",
+      underscored: true
+    }
   );
 
   return Contact;

@@ -3,10 +3,10 @@ const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
-      this.hasOne(models.Token)
-      this.hasOne(models.Contact)
-      this.belongsTo(models.Role)
-      this.hasMany(model.Movie)
+      this.hasOne(models.token);
+      this.hasOne(models.contact);
+      this.belongsTo(models.role);
+      this.hasMany(models.movie);
     }
   }
 
@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: "user",
     underscored: true
-  })
+  });
 
-  return User
-}
+  return User;
+};
