@@ -1,9 +1,9 @@
-const { Model } = require('sequelize');
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Movie extends Model {
     static associate(models) {
-      this.belongsTo(models.User)
+      this.belongsTo(models.user);
     }
   }
 
@@ -19,9 +19,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'movie',
-      underscored: true,
-    },
+      modelName: "movie",
+      underscored: true
+    }
   );
 
   return Movie;

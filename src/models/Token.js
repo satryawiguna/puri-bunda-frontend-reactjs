@@ -1,9 +1,9 @@
-const { Model } = require('sequelize');
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Token extends Model {
     static associate(models) {
-      this.belongsTo(models.User)
+      this.belongsTo(models.user);
     }
   }
 
@@ -13,13 +13,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       expires: DataTypes.DATE,
       blacklisted: DataTypes.BOOLEAN,
-      user_id: DataTypes.INTEGER,
+      user_id: DataTypes.INTEGER
     },
     {
       sequelize,
-      modelName: 'token',
+      modelName: "token",
       underscored: true
-    },
+    }
   );
 
   return Token;
