@@ -10,9 +10,9 @@ const movieController = new MovieController();
 const movieValidator = new MovieValidator();
 
 router.post('/fetchAll', auth(), movieValidator.movieFilterValidator, movieController.fetchMovies);
+router.get('/:id', auth(), movieController.showMovie);
 router.post('/create', auth(), movieValidator.movieCreateValidator, movieController.createMovie);
 router.put('/:id/update', auth(), movieValidator.movieUpdateValidator, movieController.updateMovie);
 router.delete('/:id', auth(), movieController.deleteMovie);
-router.get('/:id', auth(), movieController.showMovie);
 
 export default router;

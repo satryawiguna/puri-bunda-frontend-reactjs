@@ -1,202 +1,176 @@
-import httpStatus from 'http-status';
-import { Op } from 'sequelize';
-import * as bcrypt from 'bcrypt';
-import IMovieService from './contracts/IMovieService';
-import MovieDao from '../dao/MovieDao';
-import { logger } from '../config/logger';
-import ResponseHandler from '../helper/ResponseHandler';
-import { IMovieFilterRequest } from '../controllers/Requests/IMovieFilterRequest';
-import { IMovie } from '../models/interfaces/IMovie';
-import { IUser } from '../models/interfaces/IUser';
+import httpStatus from "http-status";
+import { Op } from "sequelize";
+import IMovieService from "./contracts/IMovieService";
+import MovieDao from "../dao/MovieDao";
+import { logger } from "../config/logger";
+import ResponseHandler from "../helper/ResponseHandler";
+import { IMovieFilterRequest } from "../controllers/Requests/IMovieFilterRequest";
+import { IMovie } from "../models/interfaces/IMovie";
 
 export default class MovieService implements IMovieService {
-     private movieDao: MovieDao;
+  private movieDao: MovieDao;
 
-     constructor() {
-          this.movieDao = new MovieDao();
-     }
+  constructor() {
+    this.movieDao = new MovieDao();
+  }
 
-     getMovies = async (movieFilterRequest: IMovieFilterRequest) => {
-          try {
-               let where: object = {};
+  getMovies = async (movieFilterRequest: IMovieFilterRequest) => {
+    try {
+      let where: object = {};
 
-               if (movieFilterRequest.search || movieFilterRequest.search !== undefined) {
-                    where = {
-                         ...where,
-                         title: {
-                              [Op.like]: movieFilterRequest.search,
-                         },
-                         description: {
-                              [Op.like]: movieFilterRequest.search,
-                         },
-                    };
-               }
-
-               if (
-                    ((movieFilterRequest.release_date_start ||
-                         movieFilterRequest.release_date_start !== undefined) &&
-                         movieFilterRequest.release_date_end) ||
-                    movieFilterRequest.release_date_end !== undefined
-               ) {
-                    where = {
-                         ...where,
-                         release: {
-                              $between: [
-                                   movieFilterRequest.release_date_start,
-                                   movieFilterRequest.release_date_end,
-                              ],
-                         },
-                    };
-               }
-
-               let order;
-
-               if (movieFilterRequest.order_column && movieFilterRequest.order_sort) {
-                    order = [movieFilterRequest.order_column, movieFilterRequest.order_sort];
-               }
-
-               const moviesCount = await this.movieDao.getCountByWhere(where);
-               const moviesData = await this.movieDao.findByWhere(
-                    where,
-                    null,
-                    order,
-                    movieFilterRequest.limit,
-                    movieFilterRequest.offset
-               );
-
-               return ResponseHandler.getPaginationData(
-                    {
-                         rows: moviesData,
-                         count: moviesCount,
-                    },
-                    movieFilterRequest.page,
-                    movieFilterRequest.limit
-               );
-          } catch (e) {
-               logger.error(e);
-
-               return ResponseHandler.returnError(httpStatus.BAD_REQUEST, 'Something went wrong!');
+      if (movieFilterRequest.search || movieFilterRequest.search !== undefined) {
+        where = {
+          ...where,
+          title: {
+            [Op.like]: movieFilterRequest.search
+          },
+          description: {
+            [Op.like]: movieFilterRequest.search
           }
-     };
+        };
+      }
 
-     createMovie = async (createMovieRequest: IMovie, userInfo: IUser | undefined) => {
-          try {
-               let message = 'Successfully Created movie.';
-               const request: object = {
-                    ...createMovieRequest,
-                    user_id: userInfo?.id,
-               };
-
-               let movieData = await this.movieDao.create(request);
-
-               if (!movieData) {
-                    message = 'Creating Failed! Please Try again.';
-
-                    return ResponseHandler.returnError(httpStatus.BAD_REQUEST, message);
-               }
-
-               movieData = movieData.toJSON();
-
-               return ResponseHandler.returnSuccess(httpStatus.CREATED, message, movieData);
-          } catch (e) {
-               logger.error(e);
-
-               return ResponseHandler.returnError(httpStatus.BAD_REQUEST, 'Something went wrong!');
+      if (
+        ((movieFilterRequest.release_date_start ||
+            movieFilterRequest.release_date_start !== undefined) &&
+          movieFilterRequest.release_date_end) ||
+        movieFilterRequest.release_date_end !== undefined
+      ) {
+        where = {
+          ...where,
+          release: {
+            $between: [
+              movieFilterRequest.release_date_start,
+              movieFilterRequest.release_date_end
+            ]
           }
-     };
+        };
+      }
 
-     updateMovie = async (updateMovieRequest: IMovie, id: number) => {
-          try {
-               let message = 'Successfully Updated movie.';
+      let order;
 
-               const movieData = await this.movieDao.findById(id);
+      if (movieFilterRequest.order_column && movieFilterRequest.order_sort) {
+        order = [[movieFilterRequest.order_column, movieFilterRequest.order_sort]];
+      }
 
-               if (!movieData) {
-                    message = 'Movie not found!';
+      const moviesData = await this.movieDao.getDataTableData(
+        where,
+        movieFilterRequest.limit,
+        movieFilterRequest.offset,
+        order
+      );
 
-                    return ResponseHandler.returnError(httpStatus.BAD_REQUEST, message);
-               }
+      return ResponseHandler.getPaginationData(
+        moviesData,
+        movieFilterRequest.page,
+        movieFilterRequest.limit
+      );
+    } catch (e) {
+      logger.error(e);
 
-               if (updateMovieRequest.id !== id) {
-                    message = 'Invalid request.';
+      return ResponseHandler.returnError(httpStatus.BAD_REQUEST, "Something went wrong!");
+    }
+  };
 
-                    return ResponseHandler.returnError(httpStatus.BAD_REQUEST, message);
-               }
+  getMovieById = async (id: number) => {
+    try {
+      const movie = await this.movieDao.findOneByWhere({
+        id
+      });
 
-               const updateMovie = await this.movieDao.updateWhere(
-                    {
-                         title: updateMovieRequest.title,
-                         description: updateMovieRequest.description,
-                         release_date: updateMovieRequest.release_date,
-                         runtime: updateMovieRequest.runtime,
-                         revenue: updateMovieRequest.revenue,
-                         poster: updateMovieRequest.poster,
-                    },
-                    { id }
-               );
+      return ResponseHandler.returnSuccess(httpStatus.OK, "", movie);
+    } catch (e) {
+      logger.error(e);
 
-               if (updateMovie) {
-                    return ResponseHandler.returnSuccess(
-                         httpStatus.OK,
-                         'Movie updated Successfully!',
-                         await this.movieDao.findById(updateMovie)
-                    );
-               }
+      return ResponseHandler.returnError(httpStatus.BAD_REQUEST, "Something went wrong!");
+    }
+  };
 
-               return ResponseHandler.returnError(httpStatus.BAD_REQUEST, 'Movie Update Failed!');
-          } catch (e) {
-               logger.error(e);
+  createMovie = async (createMovieRequest: IMovie) => {
+    try {
+      let message = "Successfully Created movie.";
 
-               return ResponseHandler.returnError(httpStatus.BAD_REQUEST, 'Something went wrong!');
-          }
-     };
+      let movieData = await this.movieDao.create(createMovieRequest);
 
-     deleteMovie = async (id: number, userInfo: IUser | undefined) => {
-          try {
-               const movie = await this.movieDao.findById(id);
+      if (!movieData) {
+        message = "Creating Failed! Please Try again.";
 
-               if (!movie) {
-                    return ResponseHandler.returnError(httpStatus.BAD_REQUEST, 'Movie Not found!');
-               }
+        return ResponseHandler.returnError(httpStatus.BAD_REQUEST, message);
+      }
 
-               if (movie.user_id !== userInfo?.id) {
-                    return ResponseHandler.returnError(httpStatus.BAD_REQUEST, 'Movie Not found!');
-               }
+      movieData = movieData.toJSON();
 
-               await this.movieDao.deleteByWhere({
-                    id,
-               });
+      return ResponseHandler.returnSuccess(httpStatus.CREATED, message, movieData);
+    } catch (e) {
+      logger.error(e);
 
-               return ResponseHandler.returnSuccess(httpStatus.OK, 'Movie deleted Successfully!');
-          } catch (e) {
-               logger.error(e);
+      return ResponseHandler.returnError(httpStatus.BAD_REQUEST, "Something went wrong!");
+    }
+  };
 
-               return ResponseHandler.returnError(httpStatus.BAD_REQUEST, 'Something went wrong!');
-          }
-     };
+  updateMovie = async (updateMovieRequest: IMovie, id: number) => {
+    try {
+      let message = "Successfully Updated movie.";
 
-     getMovieById = async (id: number, userInfo: IUser | undefined) => {
-          try {
-               const movie = await this.movieDao.findOneByWhereInclude(
-                    {
-                         id,
-                    },
-                    [
-                         {
-                              model: 'user',
-                         },
-                    ]
-               );
+      const movieData = await this.movieDao.findById(id);
 
-               if (movie.user_id !== userInfo?.id) {
-                    return ResponseHandler.returnError(httpStatus.BAD_REQUEST, 'Movie Not found!');
-               }
+      if (!movieData) {
+        message = "Movie not found!";
 
-               return ResponseHandler.returnSuccess(httpStatus.OK, '', movie);
-          } catch (e) {
-               logger.error(e);
+        return ResponseHandler.returnError(httpStatus.BAD_REQUEST, message);
+      }
 
-               return ResponseHandler.returnError(httpStatus.BAD_REQUEST, 'Something went wrong!');
-          }
-     };
+      if (updateMovieRequest.id !== id) {
+        message = "Invalid request.";
+
+        return ResponseHandler.returnError(httpStatus.BAD_REQUEST, message);
+      }
+
+      const updateMovie = await this.movieDao.updateWhere(
+        {
+          title: updateMovieRequest.title,
+          description: updateMovieRequest.description,
+          release_date: updateMovieRequest.release_date,
+          runtime: updateMovieRequest.runtime,
+          revenue: updateMovieRequest.revenue,
+          poster: updateMovieRequest.poster
+        },
+        { id }
+      );
+
+      if (updateMovie) {
+        return ResponseHandler.returnSuccess(
+          httpStatus.OK,
+          "Movie updated Successfully!",
+          await this.movieDao.findById(updateMovie)
+        );
+      }
+
+      return ResponseHandler.returnError(httpStatus.BAD_REQUEST, "Movie Update Failed!");
+    } catch (e) {
+      logger.error(e);
+
+      return ResponseHandler.returnError(httpStatus.BAD_REQUEST, "Something went wrong!");
+    }
+  };
+
+  deleteMovie = async (id: number) => {
+    try {
+      const movie = await this.movieDao.findById(id);
+
+      if (!movie) {
+        return ResponseHandler.returnError(httpStatus.BAD_REQUEST, "Movie Not found!");
+      }
+
+      await this.movieDao.deleteByWhere({
+        id
+      });
+
+      return ResponseHandler.returnSuccess(httpStatus.OK, "Movie deleted Successfully!");
+    } catch (e) {
+      logger.error(e);
+
+      return ResponseHandler.returnError(httpStatus.BAD_REQUEST, "Something went wrong!");
+    }
+  };
 }
