@@ -6,6 +6,7 @@ import AuthController from '../controllers/AuthController';
 const router = Router();
 
 const authController = new AuthController();
+
 const userValidator = new UserValidator();
 
 router.post('/register', userValidator.userCreateValidator, authController.register);

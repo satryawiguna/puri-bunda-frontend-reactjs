@@ -7,7 +7,7 @@ import ResponseHandler from '../helper/ResponseHandler';
 import ContactDao from '../dao/ContactDao';
 import { roleConstant, userConstant } from '../config/constant';
 import { logger } from '../config/logger';
-import { IUserContract } from '../models/interfaces/IUserContact';
+import { IRegisterRequest } from '../controllers/Requests/IRegisterRequest';
 
 export default class UserService implements IUserService {
      private userDao: UserDao;
@@ -19,18 +19,18 @@ export default class UserService implements IUserService {
           this.contactDao = new ContactDao();
      }
 
-     createUser = async (createUserRequest: IUserContract) => {
+     createUser = async (registerRequest: IRegisterRequest) => {
           try {
                let message = 'Successfully Registered the account! Please Verify your email.';
 
-               if (await this.userDao.isEmailExists(createUserRequest.email)) {
+               if (await this.userDao.isEmailExists(registerRequest.email)) {
                     return ResponseHandler.returnError(
                          httpStatus.BAD_REQUEST,
                          'Email already taken'
                     );
                }
 
-               if (createUserRequest.password === undefined) {
+               if (registerRequest.password === undefined) {
                     return ResponseHandler.returnError(
                          httpStatus.BAD_REQUEST,
                          'Password is required!'
@@ -38,9 +38,9 @@ export default class UserService implements IUserService {
                }
 
                const userRequest = {
-                    email: createUserRequest.email.toLowerCase(),
+                    email: registerRequest.email.toLowerCase(),
                     role_id: roleConstant.GUEST,
-                    password: bcrypt.hashSync(createUserRequest.password, 8),
+                    password: bcrypt.hashSync(registerRequest.password, 8),
                     status: userConstant.STATUS_ACTIVE,
                     email_verified: userConstant.EMAIL_VERIFIED_FALSE,
                };
@@ -55,8 +55,8 @@ export default class UserService implements IUserService {
 
                const contactRequest = {
                     user_id: userData.dataValues.id,
-                    first_name: createUserRequest.first_name,
-                    last_name: createUserRequest.last_name,
+                    first_name: registerRequest.first_name,
+                    last_name: registerRequest.last_name,
                };
 
                await this.contactDao.create(contactRequest);
@@ -90,7 +90,6 @@ export default class UserService implements IUserService {
                const { password, confirm_password, old_password } = req.body;
 
                let message = 'Password Successfully Updated!';
-               const statusCode = httpStatus.OK;
 
                if (req.userInfo === undefined) {
                     return ResponseHandler.returnError(
@@ -126,7 +125,7 @@ export default class UserService implements IUserService {
 
                const updateUser = await this.userDao.updateWhere(
                     { password: bcrypt.hashSync(password, 8) },
-                    { uuid: user.uuid }
+                    { id: user.id }
                );
 
                if (updateUser) {
