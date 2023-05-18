@@ -1,11 +1,10 @@
 import { Request } from 'express';
 import { ApiServiceResponse } from '../../@types/apiServiceResponse';
 import { IUser } from '../../models/interfaces/IUser';
-import { IContact } from '../../models/interfaces/IContact';
-import { IUserContract } from '../../models/interfaces/IUserContact';
+import { IRegisterRequest } from '../../controllers/Requests/IRegisterRequest';
 
 export default interface IUserService {
-     createUser: (createUserRequest: IUserContract) => Promise<ApiServiceResponse>;
+     createUser: (registerRequest: IRegisterRequest) => Promise<ApiServiceResponse>;
      isEmailExists: (email: string) => Promise<ApiServiceResponse>;
      getUserById: (id: number) => Promise<IUser>;
      changePassword: (req: Request) => Promise<ApiServiceResponse>;

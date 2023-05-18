@@ -43,7 +43,7 @@ export default class TokenService implements ITokenService {
           const tokenDoc: IToken = await this.tokenDao.findOne({
                token,
                type,
-               user_uuid: payload.sub,
+               user_id: payload.sub,
                blacklisted: false,
           });
           if (!tokenDoc) {
@@ -72,6 +72,10 @@ export default class TokenService implements ITokenService {
      removeTokenById = async (id: number) => this.tokenDao.remove({ id });
 
      generateAuthTokens = async (user: IUser) => {
+          await this.tokenDao.remove({
+               user_id: user.id,
+          });
+
           const accessTokenExpires: Date = addMinutes(
                new Date(),
                config.jwt.accessExpirationMinutes

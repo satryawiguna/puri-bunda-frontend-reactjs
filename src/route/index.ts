@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import authRoute from './authRoute';
+import movieRoute from './movieRoute';
 
 const router = Router();
 
@@ -7,6 +8,10 @@ const defaultRoutes = [
      {
           path: '/auth',
           route: authRoute,
+     },
+     {
+          path: '/movie',
+          route: movieRoute,
      },
 ];
 
