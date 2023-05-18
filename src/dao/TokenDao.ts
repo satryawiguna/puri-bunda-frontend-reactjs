@@ -9,11 +9,11 @@ export default class TokenDao extends SuperDao implements ITokenDao {
           super(Token);
      }
 
-     async findOne(where: object) {
+     public async findOne(where: object) {
           return Token.findOne({ where });
      }
 
-     async remove(where: object) {
+     public async remove(where: object) {
           return Token.destroy({ where });
      }
 }

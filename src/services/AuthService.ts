@@ -26,6 +26,7 @@ export default class AuthService implements IAuthService {
           try {
                let message = 'Login Successful';
                let statusCode: number = httpStatus.OK;
+               console.log('sini');
                let user = await this.userDao.findByEmail(email);
 
                if (user == null) {
