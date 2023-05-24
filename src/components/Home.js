@@ -1,11 +1,7 @@
-import CommonLayout from "./layouts/CommonLayout";
-
 const Home = () => {
-  return (
-    <CommonLayout>
-
-    </CommonLayout>
-  );
+    return (
+        <></>
+    );
 };
 
 export default Home;

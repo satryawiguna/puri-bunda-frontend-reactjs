@@ -1,17 +1,19 @@
+import MessageAlert from "../../commons/MessageAlert";
 import React, {useState} from "react";
-import {Link, useNavigate} from "react-router-dom";
-import {useRegister} from "../hooks/useAuth";
-import MessageAlert from "./commons/MessageAlert";
+import DatePicker from "react-datepicker";
 import {Formik} from "formik";
+import {useNavigate} from "react-router-dom";
+import "react-datepicker/dist/react-datepicker.css";
+import {useCreateMovie} from "../../../hooks";
 
-const Register = () => {
-    const navigate = useNavigate();
+const MovieCreate = () => {
+    const navigate = useNavigate()
 
     const [showMessageAlert, setShowMessageAlert] = useState(false);
 
-    const {mutate: doRegister, isError: isErrorRegister, error: errorRegister} = useRegister((res) => {
-        navigate("/login", {replace: true})
-    }, (error) => {
+    const {mutate: doCreateMovie, isError: isErrorCreateMovie, error: errorCreateMovie} = useCreateMovie((res) => {
+        navigate("/admin/movies")
+    }, (err) => {
         setShowMessageAlert(true)
     })
 
@@ -20,25 +22,26 @@ const Register = () => {
     }
 
     return (
-        <section className="hero has-background-grey-light is-fullheight is-fullwidth">
-            <div className="hero-body">
+        <>
+            <section className="section">
                 <div className="container">
                     <div className="columns is-centered">
-                        <div className="column is-4-desktop">
-                            <MessageAlert isError={isErrorRegister}
-                                          error={errorRegister}
+                        <div className="column is-full-desktop">
+                            <MessageAlert isError={isErrorCreateMovie}
+                                          error={errorCreateMovie}
                                           showMessageAlert={showMessageAlert}
                                           handleCloseMessageAlert={handleCloseMessageAlert}/>
                             <Formik
                                 initialValues={{
-                                    first_name: '',
-                                    last_name: '',
-                                    email: '',
-                                    password: '',
-                                    confirm_password: ''
+                                    title: '',
+                                    description: '',
+                                    release_date: new Date(),
+                                    runtime: '',
+                                    revenue: '',
+                                    poster: '',
                                 }}
                                 onSubmit={(values) => {
-                                    doRegister(values)
+                                    doCreateMovie(values)
                                 }}
                             >{
                                 ({
@@ -50,84 +53,97 @@ const Register = () => {
                                  }) => (
                                     <form onSubmit={handleSubmit} className="box">
                                         <div className="field mt-3">
-                                            <label className="label">First Name</label>
+                                            <label className="label">Title</label>
                                             <div className="controls">
                                                 <input
-                                                    name="first_name"
+                                                    name="title"
                                                     type="text"
                                                     className="input"
-                                                    placeholder="First Name"
-                                                    value={values.first_name}
+                                                    placeholder="Title"
+                                                    value={values.title}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
                                                 />
                                             </div>
                                         </div>
                                         <div className="field mt-3">
-                                            <label className="label">Last Name</label>
+                                            <label className="label">description</label>
                                             <div className="controls">
-                                                <input
-                                                    name="last_name"
-                                                    type="text"
+                                                <textarea
+                                                    name="description"
+                                                    rows="5"
                                                     className="input"
-                                                    placeholder="Last Name"
-                                                    value={values.last_name}
+                                                    style={{"height": "100px"}}
+                                                    placeholder="Description"
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
-                                                />
+                                                    value={values.description}
+                                                >{values.description}</textarea>
                                             </div>
                                         </div>
                                         <div className="field mt-3">
-                                            <label className="label">Email</label>
+                                            <label className="label">Release Date</label>
                                             <div className="controls">
-                                                <input
+                                                <DatePicker
                                                     name="email"
+                                                    selected={values.release_date}
+                                                    className="input"
+                                                    placeholderText="Release Date"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="field mt-3">
+                                            <label className="label">Runtime</label>
+                                            <div className="controls">
+                                                <input
+                                                    name="runtime"
                                                     type="text"
                                                     className="input"
-                                                    placeholder="Email Address"
-                                                    value={values.email}
+                                                    placeholder="Runtime"
+                                                    value={values.runtine}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
                                                 />
                                             </div>
                                         </div>
                                         <div className="field mt-3">
-                                            <label className="label">Password</label>
+                                            <label className="label">Revenue</label>
                                             <div className="controls">
                                                 <input
-                                                    name="password"
-                                                    type="password"
+                                                    name="revenue"
+                                                    type="number"
                                                     className="input"
-                                                    placeholder="Password"
-                                                    value={values.password}
+                                                    placeholder="Revenue"
+                                                    value={values.revenue}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
                                                 />
                                             </div>
                                         </div>
                                         <div className="field mt-3">
-                                            <label className="label">Confirm Password</label>
+                                            <label className="label">Poster</label>
                                             <div className="controls">
                                                 <input
-                                                    name="confirm_password"
-                                                    type="password"
+                                                    name="poster"
+                                                    type="text"
                                                     className="input"
-                                                    placeholder="Confirm Password"
-                                                    value={values.confirm_password}
+                                                    placeholder="Poster"
+                                                    value={values.poster}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
                                                 />
                                             </div>
                                         </div>
-                                        <div className="field mt-3">
-                                            <button type="submit" className="button is-success is-fullwidth">
-                                                Register
+                                        <div className="field mt-5">
+                                            <button type="submit" className="button is-danger mr-3"
+                                                    onClick={() => {
+                                                        navigate("/admin/movies")
+                                                    }}>
+                                                Cancel
                                             </button>
-                                        </div>
-                                        <div className="field mt-3">
-                                            <small>
-                                                Back to login? <Link to={"/login"}>Click here</Link>
-                                            </small>
+                                            <button type="submit" className="button is-success">
+                                                Save
+                                            </button>
                                         </div>
                                     </form>
                                 )
@@ -136,9 +152,9 @@ const Register = () => {
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-    );
-};
+            </section>
+        </>
+    )
+}
 
-export default Register;
+export default MovieCreate

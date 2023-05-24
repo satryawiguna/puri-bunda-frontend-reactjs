@@ -1,26 +1,45 @@
-import React from "react";
-import { createRoot } from "react-dom/client";
-import { Provider } from "react-redux";
-import { persistor, store } from "./app/store";
 import App from "./App";
-import { BrowserRouter } from "react-router-dom";
+import React from "react";
+import {createRoot} from "react-dom/client";
+import {Provider} from "react-redux";
+import {persistor, store} from "./app/store";
+import {BrowserRouter} from "react-router-dom";
+import {PersistGate} from "redux-persist/integration/react";
+import {QueryClientProvider, QueryClient} from "@tanstack/react-query";
+import {setAuthToken, setAuthType} from "./libs/HttpClient";
 import "bulma/css/bulma.css";
-import axios from "axios";
-import { PersistGate } from "redux-persist/integration/react";
-
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL = process.env.REACT_APP_BASE_API_URL;
-axios.defaults.headers.post["Content-Type"] = "application/json";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            refetchOnWindowFocus: false,
+            refetchOnmount: false,
+            refetchOnReconnect: false,
+            retry: false,
+            staleTime: 5 * 60 * 1000,
+        },
+    }
+})
+
+const handleOnBeforeLift = () => {
+    if (
+        store.getState().auth.isLoggedIn
+    ) {
+        setAuthToken(store.getState().auth.tokens.access.token)
+        setAuthType('admin')
+    }
+}
 
 root.render(
-  <Provider store={store}>
-    <BrowserRouter>
-      <PersistGate loading={null} persistor={persistor}>
-        <App />
-      </PersistGate>
-    </BrowserRouter>
-  </Provider>
+    <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor} onBeforeLift={handleOnBeforeLift}>
+            <QueryClientProvider client={queryClient}>
+                <BrowserRouter>
+                    <App/>
+                </BrowserRouter>
+            </QueryClientProvider>
+        </PersistGate>
+    </Provider>
 );
