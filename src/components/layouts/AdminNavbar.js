@@ -7,25 +7,20 @@ const AdminNavbar = () => {
     const {userInfo} = useSelector((state) => state.auth)
 
     return (
-        <nav
-            className="navbar is-light"
-            role="navigation"
-            aria-label="main navigation"
-        >
-            <div className="container">
+        <>
+            <nav
+                className="navbar is-light"
+                role="navigation"
+                aria-label="main navigation"
+            >
                 <div className="navbar-brand">
                     <Link className="navbar-item" to={`/`}>
                         <strong>
                             <h2>MOVIE GALLERY</h2>
                         </strong>
                     </Link>
-                    <a
-                        href="/"
-                        role="button"
-                        className="navbar-burger burger"
-                        aria-label="menu"
-                        aria-expanded="false"
-                        data-target="navbarBasicExample"
+                    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
+                       data-target="navbarBasicExample"
                     >
                         <span aria-hidden="true"></span>
                         <span aria-hidden="true"></span>
@@ -53,8 +48,8 @@ const AdminNavbar = () => {
                         </div>
                     </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </>
     );
 };
 
