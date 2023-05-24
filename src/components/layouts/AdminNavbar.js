@@ -19,7 +19,7 @@ const AdminNavbar = () => {
                             <h2>MOVIE GALLERY</h2>
                         </strong>
                     </Link>
-                    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
+                    <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false"
                        data-target="navbarBasicExample"
                     >
                         <span aria-hidden="true"></span>

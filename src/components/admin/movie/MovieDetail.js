@@ -1,5 +1,6 @@
 import {Link, useParams} from "react-router-dom";
 import {useGetMovie} from "../../../hooks";
+import moment from "moment";
 
 const MovieDetail = () => {
     const {id} = useParams()
@@ -24,6 +25,16 @@ const MovieDetail = () => {
                                         <div className="media-content">
                                             <p className="title is-4">{movie.data.title}</p>
                                             <p className="subtitle is-6">{movie.data.description}</p>
+                                            <div className="columns m-0 p-0">
+                                                <div className="column m-0 p-0">
+                                                    <h3 className="has-text-weight-bold">Release Date</h3>
+                                                    {moment(movie.data.release_date).format('MMM, Do YYYY')}
+                                                </div>
+                                                <div className="column m-0 p-0">
+                                                    <h3 className="has-text-weight-bold">Runtime</h3>
+                                                    {movie.data.runtime}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -5,6 +5,7 @@
 /logs
 
 #public resources
+/public
 /tmp
 ~/
 # testing
@@ -31,3 +32,4 @@ docker-env/aflocal-local.yml
 
 #build
 /build
+.vercel
