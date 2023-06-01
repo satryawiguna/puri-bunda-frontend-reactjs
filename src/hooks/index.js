@@ -26,6 +26,16 @@ export {
 } from './usePosition'
 
 export {
+    useFetchAllEmployees,
+    useFetchAllSearchEmployees,
+    useFetchAllSearchPageEmployees,
+    useCreateEmployee,
+    useUpdateEmployee,
+    useDeleteEmployee,
+    useGetEmployee
+} from './useEmployee'
+
+export {
     useGetCountTotalEmployee,
     useGetCountTotalLogin,
     useGetCountTotalUnit,

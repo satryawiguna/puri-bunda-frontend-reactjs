@@ -24,6 +24,10 @@ import UnitIndex from "./components/admin/unit/UnitIndex";
 import UnitCreate from "./components/admin/unit/UnitCreate";
 import UnitEdit from "./components/admin/unit/UnitEdit";
 import UnitView from "./components/admin/unit/UnitView";
+import EmployeeIndex from "./components/admin/employee/EmployeeIndex";
+import EmployeeCreate from "./components/admin/employee/EmployeeCreate";
+import EmployeeEdit from "./components/admin/employee/EmployeeEdit";
+import EmployeeView from "./components/admin/employee/EmployeeView";
 
 const App = () => {
     const navigate = useNavigate()
@@ -59,17 +63,22 @@ const App = () => {
                         <GuardedRoute element={<PrivateRoute/>}>
                             <GuardedRoute path="/admin/dashboard" element={<Dashboard/>}/>
 
-                            <GuardedRoute path="/admin/unit" element={<UnitIndex/>} guards={adminGuards}/>
-                            <GuardedRoute path="/admin/unit/create" element={<UnitCreate/>} guards={adminGuards}/>
-                            <GuardedRoute path="/admin/unit/:id/edit" element={<UnitEdit/>} guards={adminGuards}/>
-                            <GuardedRoute path="/admin/unit/:id" element={<UnitView/>} guards={adminGuards}/>
+                            <GuardedRoute path="/admin/unit" element={<UnitIndex/>}/>
+                            <GuardedRoute path="/admin/unit/create" element={<UnitCreate/>}/>
+                            <GuardedRoute path="/admin/unit/:id/edit" element={<UnitEdit/>}/>
+                            <GuardedRoute path="/admin/unit/:id" element={<UnitView/>}/>
 
-                            <GuardedRoute path="/admin/position" element={<PositionIndex/>} guards={adminGuards}/>
-                            <GuardedRoute path="/admin/position/create" element={<PositionCreate/>}
+                            <GuardedRoute path="/admin/position" element={<PositionIndex/>}/>
+                            <GuardedRoute path="/admin/position/create" element={<PositionCreate/>}/>
+                            <GuardedRoute path="/admin/position/:id/edit" element={<PositionEdit/>}/>
+                            <GuardedRoute path="/admin/position/:id" element={<PositionView/>}/>
+
+                            <GuardedRoute path="/admin/employee" element={<EmployeeIndex/>} guards={adminGuards}/>
+                            <GuardedRoute path="/admin/employee/create" element={<EmployeeCreate/>}
                                           guards={adminGuards}/>
-                            <GuardedRoute path="/admin/position/:id/edit" element={<PositionEdit/>}
+                            <GuardedRoute path="/admin/employee/:id/edit" element={<EmployeeEdit/>}
                                           guards={adminGuards}/>
-                            <GuardedRoute path="/admin/position/:id" element={<PositionView/>} guards={adminGuards}/>
+                            <GuardedRoute path="/admin/employee/:id" element={<EmployeeView/>} guards={adminGuards}/>
                         </GuardedRoute>
                     </GuardedRoutes>
                 </GuardProvider>

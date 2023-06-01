@@ -183,7 +183,7 @@ const Dashboard = () => {
                                                 <th>{topTenUserByLogin.nick_name}</th>
                                                 <td>{topTenUserByLogin.full_name}</td>
                                                 <td>{(topTenUserByLogin.unit) ? topTenUserByLogin.unit.title : 'N/A'}</td>
-                                                <td>{(topTenUserByLogin.positions.length > 0) ? topTenUserByLogin.positions.first().title : 'N/A'}</td>
+                                                <td>{(topTenUserByLogin.positions.length > 0) ? topTenUserByLogin.positions.shift().title : 'N/A'}</td>
                                                 <td>{topTenUserByLogin.join_date}</td>
                                             </tr>
                                         )}
