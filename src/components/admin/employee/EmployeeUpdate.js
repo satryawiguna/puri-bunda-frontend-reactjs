@@ -5,7 +5,7 @@ import React, {useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {useCreateMovie, useGetMovie, useUpdateMovie} from "../../../hooks";
 
-const MovieUpdate = () => {
+const EmployeeUpdate = () => {
     const navigate = useNavigate()
     const {id} = useParams()
 
@@ -168,4 +168,4 @@ const MovieUpdate = () => {
     )
 }
 
-export default MovieUpdate
+export default EmployeeUpdate

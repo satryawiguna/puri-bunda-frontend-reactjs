@@ -27,7 +27,7 @@ const handleOnBeforeLift = () => {
     if (
         store.getState().auth.isLoggedIn
     ) {
-        setAuthToken(store.getState().auth.tokens.access.token)
+        setAuthToken(store.getState().auth.access_token)
         setAuthType('admin')
     }
 }

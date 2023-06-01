@@ -6,7 +6,7 @@ import {useNavigate} from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import {useCreateMovie} from "../../../hooks";
 
-const MovieCreate = () => {
+const EmployeeCreate = () => {
     const navigate = useNavigate()
 
     const [showMessageAlert, setShowMessageAlert] = useState(false);
@@ -157,4 +157,4 @@ const MovieCreate = () => {
     )
 }
 
-export default MovieCreate
+export default EmployeeCreate

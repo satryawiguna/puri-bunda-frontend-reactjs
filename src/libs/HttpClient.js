@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {store} from "../app/store";
-import {logoutAction, updateTokenAction} from "../features/authSlice";
+import {logoutAction} from "../features/authSlice";
 
 const Api = axios.create({
     baseURL: `${process.env.REACT_APP_BASE_API_URL}`,
@@ -24,16 +24,12 @@ Api.interceptors.response.use((response) => {
     if (!error.response) throw new Error('Error connection')
 
     if (error.response.status === 401) {
-        let refreshTokenRequest = {
-            refresh_token: `${store.getState().auth.tokens.refresh.token}`
-        }
-
-        axios.post(`${process.env.REACT_APP_BASE_API_URL}auth/refresh-token`, refreshTokenRequest)
+        axios.post(`${process.env.REACT_APP_BASE_API_URL}auth/logout`)
             .then((res) => {
-                store.dispatch(updateTokenAction(res))
+                store.dispatch(logoutAction())
 
-                setAuthToken(res.data.access.token)
-                setAuthType("admin")
+                setAuthToken(null)
+                setAuthType(null)
 
                 window.location.reload()
             })
@@ -42,13 +38,13 @@ Api.interceptors.response.use((response) => {
     return Promise.reject(error.response.data);
 })
 
-export const setAuthToken = (token) => {
+export const setAuthToken = (access_token) => {
     Api.defaults.headers.common['Authorization'] = '';
 
     delete Api.defaults.headers.common['Authorization'];
 
-    if (token) {
-        Api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    if (access_token) {
+        Api.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
     }
 }
 

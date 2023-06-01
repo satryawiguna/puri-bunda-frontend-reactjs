@@ -6,10 +6,10 @@ import Dashboard from "./components/admin/Dashboard";
 import PublicRoute from "./routes/PublicRoute";
 import PrivateRoute from "./routes/PrivateRoute";
 import AuthRouter from "./routes/AuthRouter";
-import MovieIndex from "./components/admin/movie/MovieIndex";
-import MovieCreate from "./components/admin/movie/MovieCreate";
-import MovieUpdate from "./components/admin/movie/MovieUpdate";
-import MovieDetail from "./components/admin/movie/MovieDetail";
+import PositionIndex from "./components/admin/position/PositionIndex";
+import PositionCreate from "./components/admin/position/PositionCreate";
+import PositionEdit from "./components/admin/position/PositionEdit";
+import PositionView from "./components/admin/position/PositionView";
 import FourOFour from "./components/404";
 import {useNavigate} from "react-router-dom";
 import {Helmet} from "react-helmet";
@@ -20,15 +20,16 @@ import {
     GuardProvider
 } from "react-router-guarded-routes";
 import {useSelector} from "react-redux";
+import UnitIndex from "./components/admin/unit/UnitIndex";
+import UnitCreate from "./components/admin/unit/UnitCreate";
+import UnitEdit from "./components/admin/unit/UnitEdit";
+import UnitView from "./components/admin/unit/UnitView";
 
 const App = () => {
     const navigate = useNavigate()
     const {userInfo} = useSelector((state) => state.auth)
 
     const adminGuard = (to, from, next, {route}) => {
-        if (userInfo.role_id !== 1)
-            navigate("/404")
-
         next()
     }
 
@@ -57,10 +58,18 @@ const App = () => {
                         </GuardedRoute>
                         <GuardedRoute element={<PrivateRoute/>}>
                             <GuardedRoute path="/admin/dashboard" element={<Dashboard/>}/>
-                            <GuardedRoute path="/admin/movies" element={<MovieIndex/>} guards={adminGuards}/>
-                            <GuardedRoute path="/admin/movie/create" element={<MovieCreate/>} guards={adminGuards}/>
-                            <GuardedRoute path="/admin/movie/:id/edit" element={<MovieUpdate/>} guards={adminGuards}/>
-                            <GuardedRoute path="/admin/movies/:id" element={<MovieDetail/>} guards={adminGuards}/>
+
+                            <GuardedRoute path="/admin/unit" element={<UnitIndex/>} guards={adminGuards}/>
+                            <GuardedRoute path="/admin/unit/create" element={<UnitCreate/>} guards={adminGuards}/>
+                            <GuardedRoute path="/admin/unit/:id/edit" element={<UnitEdit/>} guards={adminGuards}/>
+                            <GuardedRoute path="/admin/unit/:id" element={<UnitView/>} guards={adminGuards}/>
+
+                            <GuardedRoute path="/admin/position" element={<PositionIndex/>} guards={adminGuards}/>
+                            <GuardedRoute path="/admin/position/create" element={<PositionCreate/>}
+                                          guards={adminGuards}/>
+                            <GuardedRoute path="/admin/position/:id/edit" element={<PositionEdit/>}
+                                          guards={adminGuards}/>
+                            <GuardedRoute path="/admin/position/:id" element={<PositionView/>} guards={adminGuards}/>
                         </GuardedRoute>
                     </GuardedRoutes>
                 </GuardProvider>

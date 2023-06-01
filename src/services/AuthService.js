@@ -6,11 +6,11 @@ class AuthService {
     }
 
     static logout(request) {
-        return Api.post('/auth/logout', request)
+        return Api.post('/auth/logout')
     }
 
     static register(request) {
-        return Api.post('/auth/register', request)
+        return Api.post('/register', request)
     }
 
     static refreshToken(request) {

@@ -31,11 +31,12 @@ const Register = () => {
                                           handleCloseMessageAlert={handleCloseMessageAlert}/>
                             <Formik
                                 initialValues={{
-                                    first_name: '',
-                                    last_name: '',
+                                    nick_name: '',
+                                    full_name: '',
                                     email: '',
+                                    username: '',
                                     password: '',
-                                    confirm_password: ''
+                                    password_confirmation: ''
                                 }}
                                 onSubmit={(values) => {
                                     doRegister(values)
@@ -50,28 +51,42 @@ const Register = () => {
                                  }) => (
                                     <form onSubmit={handleSubmit} className="box">
                                         <div className="field mt-3">
-                                            <label className="label">First Name</label>
+                                            <label className="label">Nick Name</label>
                                             <div className="controls">
                                                 <input
-                                                    name="first_name"
+                                                    name="nick_name"
                                                     type="text"
                                                     className="input"
-                                                    placeholder="First Name"
-                                                    value={values.first_name}
+                                                    placeholder="Nick Name"
+                                                    value={values.nick_name}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
                                                 />
                                             </div>
                                         </div>
                                         <div className="field mt-3">
-                                            <label className="label">Last Name</label>
+                                            <label className="label">Full Name</label>
                                             <div className="controls">
                                                 <input
-                                                    name="last_name"
+                                                    name="full_name"
                                                     type="text"
                                                     className="input"
-                                                    placeholder="Last Name"
-                                                    value={values.last_name}
+                                                    placeholder="Full Name"
+                                                    value={values.full_name}
+                                                    onChange={handleChange}
+                                                    onBlur={handleBlur}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="field mt-3">
+                                            <label className="label">Username</label>
+                                            <div className="controls">
+                                                <input
+                                                    name="username"
+                                                    type="text"
+                                                    className="input"
+                                                    placeholder="Username"
+                                                    value={values.username}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
                                                 />
@@ -106,14 +121,14 @@ const Register = () => {
                                             </div>
                                         </div>
                                         <div className="field mt-3">
-                                            <label className="label">Confirm Password</label>
+                                            <label className="label">Password Confirmation</label>
                                             <div className="controls">
                                                 <input
-                                                    name="confirm_password"
+                                                    name="password_confirmation"
                                                     type="password"
                                                     className="input"
-                                                    placeholder="Confirm Password"
-                                                    value={values.confirm_password}
+                                                    placeholder="Password Confirmation"
+                                                    value={values.password_confirmation}
                                                     onChange={handleChange}
                                                     onBlur={handleBlur}
                                                 />

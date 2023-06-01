@@ -16,7 +16,7 @@ const AdminNavbar = () => {
                 <div className="navbar-brand">
                     <Link className="navbar-item" to={`/`}>
                         <strong>
-                            <h2>MOVIE GALLERY</h2>
+                            <h2>PURI BUNDA</h2>
                         </strong>
                     </Link>
                     <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false"
@@ -33,11 +33,15 @@ const AdminNavbar = () => {
                         <a href="/admin/dashboard" className="navbar-item">
                             Dashboard
                         </a>
-                        {
-                            userInfo.role_id === 1 ?
-                                <a href="/admin/movies" className="navbar-item">Movie</a> : ''
-                        }
-
+                        <a href="/admin/unit" className="navbar-item">
+                            Unit
+                        </a>
+                        <a href="/admin/position" className="navbar-item">
+                            Position
+                        </a>
+                        <a href="/admin/employee" className="navbar-item">
+                            Employee
+                        </a>
                     </div>
 
                     <div className="navbar-end">

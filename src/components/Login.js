@@ -16,13 +16,17 @@ const Login = () => {
     const {mutate: doLogin, isError: isErrorLogin, error: errorLogin} = useLogin(
         (res) => {
             const loginInfo = {
-                userInfo: res.data,
-                tokens: res.tokens
+                userInfo: {
+                    id: res.data.id,
+                    email: res.data.email,
+                    role: res.data.role
+                },
+                access_token: res.data.access_token
             };
 
             dispatch(loginAction(loginInfo))
 
-            setAuthToken(loginInfo.tokens.access.token)
+            setAuthToken(loginInfo.access_token)
             setAuthType('admin')
 
             navigate("/admin/dashboard", {replace: true})
@@ -47,7 +51,7 @@ const Login = () => {
                                           showMessageAlert={showMessageAlert}
                                           handleCloseMessageAlert={handleCloseMessageAlert}/>
                             <Formik
-                                initialValues={{email: '', password: ''}}
+                                initialValues={{identity: '', password: ''}}
                                 onSubmit={(values) => {
                                     doLogin(values)
                                 }}
@@ -62,14 +66,14 @@ const Login = () => {
                                      }) => (
                                         <form onSubmit={handleSubmit} className="box">
                                             <div className="field mt-3">
-                                                <label className="label">Email</label>
+                                                <label className="label">Email / Username</label>
                                                 <div className="controls">
                                                     <input
-                                                        name="email"
+                                                        name="identity"
                                                         type="text"
                                                         className="input"
-                                                        placeholder="Email Address"
-                                                        value={values.email}
+                                                        placeholder="Email Address / Username"
+                                                        value={values.identity}
                                                         onChange={handleChange}
                                                         onBlur={handleBlur}
                                                     />

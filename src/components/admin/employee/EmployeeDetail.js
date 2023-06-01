@@ -2,7 +2,7 @@ import {Link, useParams} from "react-router-dom";
 import {useGetMovie} from "../../../hooks";
 import moment from "moment";
 
-const MovieDetail = () => {
+const EmployeeDetail = () => {
     const {id} = useParams()
     const {data: movie, isLoading} = useGetMovie(id)
 
@@ -49,4 +49,4 @@ const MovieDetail = () => {
     )
 }
 
-export default MovieDetail
+export default EmployeeDetail

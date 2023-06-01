@@ -16,7 +16,7 @@ const CommonNavbar = () => {
                 <div className="navbar-brand">
                     <Link className="navbar-item" to={`/`}>
                         <strong>
-                            <h2>MOVIE GALLERY</h2>
+                            <h2>PURI BUNDA</h2>
                         </strong>
                     </Link>
 

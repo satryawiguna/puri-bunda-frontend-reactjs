@@ -9,12 +9,6 @@ const ButtonLogout = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const {tokens} = useSelector((state) => state.auth)
-    const logoutRequest = {
-        access_token: tokens.access.token,
-        refresh_token: tokens.refresh.token
-    }
-
     const {mutate: doLogout} = useLogout(
         (res) => {
             dispatch(logoutAction())
@@ -30,7 +24,7 @@ const ButtonLogout = () => {
     )
 
     const handleLogout = () => {
-        doLogout(logoutRequest)
+        doLogout()
     }
 
     return (
